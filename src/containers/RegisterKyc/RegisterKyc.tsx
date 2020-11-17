@@ -35,7 +35,7 @@ export const RegisterKyc = () => {
           );
         await tx.wait();
         setState({ 
-          kycMessage: tx.hash,
+          kycMessage: 'Success! Tx Hash: '+tx.hash,
           isProcessing: false
         });  
       }catch(e){

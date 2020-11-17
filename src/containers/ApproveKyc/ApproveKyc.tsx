@@ -26,7 +26,8 @@ export const ApproveKyc = () => {
 					platformIdentifier = ethers.utils.parseBytes32String(await kycInst.resolveUsername(platformAddress));
 					if(!platformIdentifier.length)
 						throw new Error('Invalid Platform Address');
-				}
+        }
+        
         const tx = await kycInst.connect(wallet.connect(providerESN)).updateKycStatus(
 					ethers.utils.formatBytes32String(username),
           level,
@@ -36,7 +37,7 @@ export const ApproveKyc = () => {
           );
         await tx.wait();
         setState({ 
-          kycMessage: tx.hash,
+          kycMessage: 'Success! Tx Hash: '+tx.hash,
           isProcessing: false
         });  
       }catch(e){
