@@ -1,0 +1,1 @@
+export { RegisterKyc } from './RegisterKyc';
