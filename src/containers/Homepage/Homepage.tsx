@@ -13,17 +13,24 @@ interface KycStatusUpdated {
 }
 
 type State = {
-  kycList: KycStatusUpdated[]
+  kycList: KycStatusUpdated[],
+  isProcessing: boolean
 }
 type Props = {};
 
 export class Homepage extends React.Component<Props, State> {
   state: State ={
-    kycList: []
+    kycList: [],
+    isProcessing: false
   };
 
-  async componentDidMount(){
+  componentDidMount(){
+    
+  }
+
+  loadKycData =async () =>{
     try{
+      await this.setState({isProcessing: true });
       const data = (await kycInst.queryFilter(
         kycInst.filters.KycStatusUpdated(null,null,null,null,null)
       ))
@@ -35,7 +42,10 @@ export class Homepage extends React.Component<Props, State> {
         specialization: log.args['specialization'],
         newKycStatus: log.args['newKycStatus']
       } as KycStatusUpdated));
-      this.setState({ kycList: data });
+      this.setState({ 
+        kycList: data,
+        isProcessing: false
+      });
     }catch(e){
       console.log(e);
     }
@@ -44,10 +54,19 @@ export class Homepage extends React.Component<Props, State> {
   render() {
     return (
       <section>
+          <br></br>
+
+        <h1>Kyc Dapp Contract Interaction</h1>
         <div className="custom-section">
           <Link className="btn btn-primary" to='/register'>Register</Link>
-          <Link className="btn btn-primary" to='/approve'>Approve</Link>
+          <Link className="btn btn-info" to='/approve'>Approve</Link>
+          <br></br>
+          <br></br>
+          <Link className="btn btn-success" to='/resolve-address'>Resolve Address</Link>
+          <Link className="btn btn-danger" to='/resolve-username'>Resolve Username</Link>
         </div>
+        <br></br>
+
         <div className="container">
           <table className='table table-striped'>
             <thead>
@@ -67,7 +86,18 @@ export class Homepage extends React.Component<Props, State> {
             </tr>)
           :
             <tr>
-              <td colSpan={5}>No Kycs Yet</td>
+              <td colSpan={5}>
+                No Kycs Yet! 
+                <br />
+                <br />
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={this.loadKycData}
+                  disabled={this.state.isProcessing}
+                  >
+                  {this.state.isProcessing ? 'Loading...':'Click To Load Kyc Data'}</button>
+                </td>
             </tr>
           }
           </table>
